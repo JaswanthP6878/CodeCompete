@@ -6,6 +6,10 @@ import cors from 'cors';
 const app = express();
 app.use(cors)
 
+const activePlayers = {}
+const host = {}
+const opp = {}
+
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -15,7 +19,12 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-    console.log(socket.id);
+  socket.on("create_game", (arg) => {
+    console.log(arg); // world
+  })
+    socket.emit('p2_joined','123455');
 });
+
+
 
 httpServer.listen(3000);

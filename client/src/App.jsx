@@ -8,13 +8,7 @@ import { useEffect } from 'react';
 export default function App() {
   const [data, setData] = useState('');
   
-  useEffect(()=>{
-    const socket = io('http://localhost:3000')
-    socket.on('connect', () => {
-      setData(socket)
-    })
-  } 
-  ,[])
+  
 
   return (
     <div className='container mx-5'>

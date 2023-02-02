@@ -1,22 +1,13 @@
-import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Editor from "../components/editor";
-import { io } from "socket.io-client";
+import { useLocation } from "react-router-dom";
 
 function JoinGame(){
-    const [socket, setSocket] = useState({});
-
-    useEffect(()=>{
-        const socket = io('http://localhost:3000')
-        socket.on('connect', () => {
-            setSocket(socket)
-        })
-      } 
-      ,[])
+  const {state} = useLocation()
 
       return (
         <div className='container mx-5'>
-          <Navbar conDetails = {socket}/>
+           <Navbar playerid = {state.player.playerID}/>
           <div>
             <Editor />
           </div>

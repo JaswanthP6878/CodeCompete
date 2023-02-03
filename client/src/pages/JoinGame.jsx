@@ -12,12 +12,17 @@ function JoinGame(){
   // useEffect(()=>{
   //   socket.emit('join_game',{playerID: socket.id});
   // }, [])
-  const handleClick = (e) => {
-    // if (inputID === ''){
-    //   alert('please enter a valid id')
-    // } else {
 
-    // }
+  const handleInputChange = (e) =>{
+    setinputID(e.target.value);
+  }
+
+  const handleClick = (e) => {
+    if (inputID === ''){
+      alert('please host player ID');
+    } else  {
+      socket.emit('find_player', {p1ID: inputID} )
+    }
   }
 
       return (
@@ -25,7 +30,7 @@ function JoinGame(){
            <Navbar playerid = {state.player.playerID}/>
           <div>
             <label htmlFor="id">Enter player 2 ID</label>
-            <input type="text" value={inputID} name="playerID" id="ID" />
+            <input type="text" value={inputID} onChange = {handleInputChange} name="playerID" id="ID" />
             <button onClick={handleClick}>Find Player</button>
           </div>
         </div>

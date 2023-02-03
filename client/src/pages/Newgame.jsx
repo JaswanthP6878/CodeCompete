@@ -11,7 +11,8 @@ function NewGame(){
     useEffect(() => {
       console.log(socket)
       socket.emit('create_game',{playerid: socket.id})
-    });
+    }, [socket]);
+
       return (
         <div className='container mx-5'>
           <Navbar playerid = {socket.id}/>

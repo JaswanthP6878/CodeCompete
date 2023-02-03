@@ -1,15 +1,32 @@
 import Navbar from "../components/Navbar";
 import Editor from "../components/editor";
 import { useLocation } from "react-router-dom";
+import socket from "../socket";
+import { useEffect } from "react";
+import { useState } from "react";
 
 function JoinGame(){
   const {state} = useLocation()
+  const [inputID, setinputID] = useState('')
+
+  // useEffect(()=>{
+  //   socket.emit('join_game',{playerID: socket.id});
+  // }, [])
+  const handleClick = (e) => {
+    // if (inputID === ''){
+    //   alert('please enter a valid id')
+    // } else {
+
+    // }
+  }
 
       return (
         <div className='container mx-5'>
            <Navbar playerid = {state.player.playerID}/>
           <div>
-            <Editor />
+            <label htmlFor="id">Enter player 2 ID</label>
+            <input type="text" value={inputID} name="playerID" id="ID" />
+            <button onClick={handleClick}>Find Player</button>
           </div>
         </div>
       )

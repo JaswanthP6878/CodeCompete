@@ -17,5 +17,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Route path='/joingame' element = {<JoinGame />}/>
     </Routes>
   </BrowserRouter>
-
 )

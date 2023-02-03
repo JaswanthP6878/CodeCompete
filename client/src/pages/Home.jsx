@@ -7,15 +7,14 @@ import socket from '../socket';
 function Home() {
     const [player, setPlayer] = useState({});
     const navigate = useNavigate();
-
+    
     useEffect(()=>{
         socket.on('connect', () => {
             setPlayer({
                 playerID: socket.id
             })
         })
-      } 
-      ,[])
+      }, [])
     
     return (
         <div>

@@ -10,10 +10,7 @@ function NewGame(){
     
     useEffect(() => {
       console.log(socket)
-      socket.on('p2_joined', (arg) => {
-        setWaiting(true)
-      }, [])
-
+      socket.emit('create_game',{playerid: socket.id})
     });
       return (
         <div className='container mx-5'>

@@ -19,7 +19,7 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-  // socket methods
+  socket.join('game_room')
   socket.on("create_game", (arg) => {
     const { playerid } = arg;
     console.log('game created by', playerid);
@@ -42,8 +42,7 @@ io.on("connection", (socket) => {
 
     if (p1ID === host ){
       console.log('game should start!!');
-      socket.emit('start_game', 'startsdadsad');
-
+      io.to('game_room').emit("start_game", 'starting game');
     } else {
       console.log('please type correct id!!');
     }

@@ -11,7 +11,11 @@ function NewGame(){
     useEffect(() => {
       console.log(socket)
       socket.emit('create_game',{playerid: socket.id})
-    }, [socket]);
+
+      socket.on('start_game', (data) => {
+        console.log(data);
+      });
+    }, []);
 
       return (
         <div className='container mx-5'>

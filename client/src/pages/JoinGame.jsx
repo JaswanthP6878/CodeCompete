@@ -9,9 +9,11 @@ function JoinGame(){
   const {state} = useLocation()
   const [inputID, setinputID] = useState('')
 
-  // useEffect(()=>{
-  //   socket.emit('join_game',{playerID: socket.id});
-  // }, [])
+  useEffect(()=>{
+    socket.on('start_game', (data) => {
+      console.log(data);
+    })
+  }, []); /// important to add the square brackets in order for the effect to load only once
 
   const handleInputChange = (e) =>{
     setinputID(e.target.value);

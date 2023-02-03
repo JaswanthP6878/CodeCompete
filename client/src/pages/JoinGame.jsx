@@ -8,10 +8,11 @@ import { useState } from "react";
 function JoinGame(){
   const {state} = useLocation()
   const [inputID, setinputID] = useState('')
+  const [Waiting, setWaiting] = useState(false)
 
   useEffect(()=>{
     socket.on('start_game', (data) => {
-      console.log(data);
+      setWaiting(true)
     })
   }, []); /// important to add the square brackets in order for the effect to load only once
 
@@ -31,9 +32,13 @@ function JoinGame(){
         <div className='container mx-5'>
            <Navbar playerid = {state.player.playerID}/>
           <div>
-            <label htmlFor="id">Enter player 2 ID</label>
-            <input type="text" value={inputID} onChange = {handleInputChange} name="playerID" id="ID" />
-            <button onClick={handleClick}>Find Player</button>
+          {Waiting === false ?         
+              <div>
+              <label htmlFor="id">Enter player 2 ID</label>
+              <input type="text" value={inputID} onChange = {handleInputChange} name="playerID" id="ID" />
+              <button onClick={handleClick}>Find Player</button>
+            </div> 
+            : <Editor /> }
           </div>
         </div>
       )

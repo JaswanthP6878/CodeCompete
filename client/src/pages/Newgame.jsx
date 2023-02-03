@@ -13,7 +13,7 @@ function NewGame(){
       socket.emit('create_game',{playerid: socket.id})
 
       socket.on('start_game', (data) => {
-        console.log(data);
+        setWaiting(true);
       });
     }, []);
 

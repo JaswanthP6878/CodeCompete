@@ -14,10 +14,7 @@ export default function Editor() {
         setProcessing(true);
         const formData = {
           language_id: 71,
-          // encode source code in base64
-        //   source_code: Buffer.from(code).toString('base64'),
           source_code: btoa(code),
-        //   stdin: Buffer.from(customInput).toString('base64')
           stdin: btoa(customInput)
         };
         const options = {
@@ -71,8 +68,8 @@ export default function Editor() {
             setProcessing(false)
             // setOutputDetails(response.data)
             // showSuccessToast(`Compiled Successfully!`)
-            
-            setCustomOutput(atob(response.data.stdout))
+            console.log(response.data)
+            // setCustomOutput(atob(response.data.stdout))
             return
           }
         } catch (err) {

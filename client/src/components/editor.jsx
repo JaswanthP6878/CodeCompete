@@ -6,11 +6,10 @@ import axios from 'axios'
 export default function Editor() {
     const [code, setCode] = useState("print('hello world')")
     const [customInput, setCustomInput] = useState('')
+    const [customOutput, setCustomOutput] = useState('')
     const [processing, setProcessing] = useState(false)
 
     //api calls
-
-
     const handleCompile = () => {
         setProcessing(true);
         const formData = {
@@ -47,8 +46,6 @@ export default function Editor() {
             console.log(error);
           });
       };
-
-
       const checkStatus = async (token) => {
         const options = {
           method: "GET",
@@ -74,7 +71,8 @@ export default function Editor() {
             setProcessing(false)
             // setOutputDetails(response.data)
             // showSuccessToast(`Compiled Successfully!`)
-            console.log('response.data', response.data)
+            
+            setCustomOutput(atob(response.data.stdout))
             return
           }
         } catch (err) {
@@ -99,7 +97,6 @@ export default function Editor() {
     const handleInputChange = (e) => {
         setCustomInput(e.target.value)
     }
-
     if (processing == true) {
         return <div> Processing code </div>;
     }
@@ -114,6 +111,10 @@ export default function Editor() {
             />
             <input className='border-2' type="text" value = {customInput} onChange = {handleInputChange}/>
             <button onClick={handleCompile}>Submit code!!</button>
+            <div className='mt-3'>
+                <h4>Output is:</h4>
+                  <span>{customOutput}</span>
+            </div>
         </div>
         
 

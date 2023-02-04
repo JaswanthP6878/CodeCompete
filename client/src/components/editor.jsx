@@ -5,47 +5,105 @@ import axios from 'axios'
 
 export default function Editor() {
     const [code, setCode] = useState("print('hello world')")
+    const [customInput, setCustomInput] = useState('')
+    const [processing, setProcessing] = useState(false)
 
-    // add the keys for testing/
+    //api calls
 
-    // const options = {
-    //     method: 'POST',
-    //     url: 'https://judge0-ce.p.rapidapi.com/submissions',
-    //     params: {base64_encoded: 'true', fields: '*'},
-    //     headers: {
-    //       'content-type': 'application/json',
-    //       'Content-Type': 'application/json',
-    //       'X-RapidAPI-Key': '' ,
-    //       'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
-    //     },
-    //     data: '{"language_id":52,"source_code":"I2luY2x1ZGUgPHN0ZGlvLmg+CgppbnQgbWFpbih2b2lkKSB7CiAgY2hhciBuYW1lWzEwXTsKICBzY2FuZigiJXMiLCBuYW1lKTsKICBwcmludGYoImhlbGxvLCAlc1xuIiwgbmFtZSk7CiAgcmV0dXJuIDA7Cn0=","stdin":"SnVkZ2Uw"}'
-    //   };
+
+    const handleCompile = () => {
+        setProcessing(true);
+        const formData = {
+          language_id: 71,
+          // encode source code in base64
+        //   source_code: Buffer.from(code).toString('base64'),
+          source_code: btoa(code),
+        //   stdin: Buffer.from(customInput).toString('base64')
+          stdin: btoa(customInput)
+        };
+        const options = {
+          method: "POST",
+          url: import.meta.env.VITE_RAPID_API_URL,
+          params: { base64_encoded: "true", fields: "*" },
+          headers: {
+            "content-type": "application/json",
+            "Content-Type": "application/json",
+            "X-RapidAPI-Host": import.meta.env.VITE_RAPID_API_HOST,
+            "X-RapidAPI-Key": import.meta.env.VITE_RAPID_API_KEY,
+          },
+          data: formData,
+        };
     
-    // const handleChange = (value, viewUpdate) => {
-    //     setCode(value);
-    //     console.log(code);
-    // }
+        axios
+          .request(options)
+          .then(function (response) {
+            console.log("res.data", response.data);
+            const token = response.data.token;
+            checkStatus(token);
+          })
+          .catch((err) => {
+            let error = err.response ? err.response.data : err;
+            setProcessing(false);
+            console.log(error);
+          });
+      };
 
-    // const handleSubmit = async () => {
-    //     console.log(options);
-    //     try {
-    //         const response = await axios.request(options);
-    //         const {token} = (response.data)
-    //         const getSubmissionsOptions  = {
-    //             method: 'GET',
-    //             url: 'https://judge0-ce.p.rapidapi.com/submissions/2e979232-92fd-4012-97cf-3e9177257d10',
-    //             params: {base64_encoded: 'true', fields: '*', token: token },
-    //             headers: {
-    //               'X-RapidAPI-Key': '',
-    //               'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
-    //             }
-    //           };
-    //         const {data} = await axios.request(getSubmissionsOptions)
-    //         console.log(data)
-    //     } catch (e) {
-    //         console.log(e)
-    //     }
-    // }
+
+      const checkStatus = async (token) => {
+        const options = {
+          method: "GET",
+          url: import.meta.env.VITE_RAPID_API_URL + "/" + token,
+          params: { base64_encoded: "true", fields: "*" },
+          headers: {
+            "X-RapidAPI-Host": import.meta.env.VITE_RAPID_API_HOST,
+            "X-RapidAPI-Key": import.meta.env.VITE_RAPID_API_KEY,
+          },
+        };
+        try {
+          let response = await axios.request(options);
+          let statusId = response.data.status?.id;
+    
+          // Processed - we have a result
+          if (statusId === 1 || statusId === 2) {
+            // still processing
+            setTimeout(() => {
+              checkStatus(token)
+            }, 2000)
+            return
+          } else {
+            setProcessing(false)
+            // setOutputDetails(response.data)
+            // showSuccessToast(`Compiled Successfully!`)
+            console.log('response.data', response.data)
+            return
+          }
+        } catch (err) {
+          console.log("err", err);
+          setProcessing(false);
+        //   showErrorToast();
+        }
+      };
+
+
+    const handleChange = (value, viewUpdate) => {
+        setCode(value);
+        console.log(code);
+    }
+    console.log(import.meta.env.VITE_RAPID_API_KEY)
+
+    const handleSubmit = (e) => {
+        console.log(customInput)
+        console.log(code)
+    };
+
+    const handleInputChange = (e) => {
+        setCustomInput(e.target.value)
+    }
+
+    if (processing == true) {
+        return <div> Processing code </div>;
+    }
+
     return (
         <div>
             <CodeMirror
@@ -54,7 +112,8 @@ export default function Editor() {
                 extensions={[langs.python()]}
                 onChange={handleChange}
             />
-            <button onClick={handleSubmit}>Submit code!!</button>
+            <input className='border-2' type="text" value = {customInput} onChange = {handleInputChange}/>
+            <button onClick={handleCompile}>Submit code!!</button>
         </div>
         
 

@@ -7,12 +7,14 @@ import socket from '../socket';
 function NewGame(){
     const {state} = useLocation()
     const [Waiting, setWaiting] = useState(false)
+    const [question, setQuestion] = useState({})
     
     useEffect(() => {
       console.log(socket)
       socket.emit('create_game',{playerid: socket.id})
 
       socket.on('start_game', (data) => {
+        setQuestion(data)
         setWaiting(true);
       });
     }, []);
@@ -23,7 +25,7 @@ function NewGame(){
           <div>
             {Waiting === false ?         
               <h3> Waiting for players to join</h3> 
-            : <Editor /> }
+            : <Editor question = {question} /> }
           </div>
         </div>
       )

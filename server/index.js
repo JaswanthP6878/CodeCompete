@@ -2,12 +2,21 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import cors from 'cors';
+import { readFileSync } from 'fs'
+
+let Problems = readFileSync('./questions.json');
+Problems = JSON.parse(Problems);
+// console.log(Problems)
 
 const app = express();
 app.use(cors)
 // const activePlayers = []
 let host = null;
 let opp = null;
+
+let winner = null;
+
+
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
@@ -37,12 +46,21 @@ io.on("connection", (socket) => {
 
     if (p1ID === host ){
       console.log('game should start!!');
-      io.to('game_room').emit("start_game", 'starting game');
+      var problems = Object.keys(Problems);
+      let problem = Problems[problems[Math.floor(problems.length * Math.random())]];
+      console.log(problem)
+      io.to('game_room').emit("start_game", problem);
     } else {
       console.log('please type correct id!!');
     }
   })
-});
 
+  socket.on('end_game', (data) => {
+    winner = data;
+    console.log('end_game server')
+    io.to('game_room').emit('finish_game', winner);
+  })
+
+});
 
 httpServer.listen(3000);

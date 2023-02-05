@@ -1,18 +1,33 @@
 import CodeMirror from '@uiw/react-codemirror';
 import Output from './Output';
 import GameEndModal from './GameEndModal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import axios from 'axios'
+import socket from '../socket';
 
-export default function Editor() {
+export default function Editor( { question }) {
     const [code, setCode] = useState("print('hello world')")
     const [customInput, setCustomInput] = useState('')
-    const [customOutput, setCustomOutput] = useState('')
     const [processing, setProcessing] = useState(false)
     const [outputDetails, setOutputDetails] = useState({})
+    const [endGame, setEndGame] = useState(false)
+    const [modalData, setModalData] = useState({})
     let currOutput = null;
     //api calls
+
+    useEffect(() => {
+        socket.on('finish_game', (data) => {
+          console.log('finishing_game_client')
+          if(data === socket.id){
+            setModalData({status: 'winner'});
+          } else {
+            setModalData({status: 'loser'});
+          }
+          setEndGame(true);
+        })
+    }, [])
+
 
     const handleCompile = () => {
         setProcessing(true);
@@ -20,7 +35,7 @@ export default function Editor() {
           language_id: 71,
           source_code: btoa(code),
           stdin: btoa(customInput),
-          expected_output:  btoa(5)
+          expected_output:  btoa(5) // testing purposes the expected output is 5.
         };
         const options = {
           method: "POST",
@@ -71,7 +86,9 @@ export default function Editor() {
           } else {
             console.log(response.data);
             if (response.data.status?.id == 3 ){ // correct answer
-               currOutput = {output : atob(response.data.stdout), status: "accepted"}
+                socket.emit('end_game', socket.id);
+                console.log('emmitting end game')
+              currOutput = {output : atob(response.data.stdout), status: "accepted"}
           } else if (response.data.status?.id == 4){ //  wrong answer
              currOutput = {output : atob(response.data.stdout), status : "wrong"}
           } else { //  runtime or  compile time error
@@ -104,6 +121,10 @@ export default function Editor() {
 
     return (
         <div>
+
+          <div className='my-3'>
+            {question?.statement}
+          </div>
             <CodeMirror
                 value={code}
                 height="200px"
@@ -113,11 +134,11 @@ export default function Editor() {
             <div className='mt-3'>
               <input className='input w-full max-w-xs' type="text" value = {customInput} onChange = {handleInputChange}/>
             </div>
-            <button onClick={handleCompile}>Submit code!!</button>
+            <button className='btn btn-outline' onClick={handleCompile}>Submit code!!</button>
             <div className='mt-3'>
                   <Output outputDetails = {outputDetails}/>
             </div>
-            {processing == true &&  <GameEndModal />}
+            {endGame == true &&  <GameEndModal data = {modalData} />}
         </div>
     );
 }

@@ -1,11 +1,23 @@
-function GameEndModal() {
-    // modal creation has occured.
+export default function GameEndModal( { data }) {
+    if(data?.status === 'winner'){
+        return (
+            <div>
+                <div className="modal modal-open">
+                    <div className="modal-box">
+                        <h3 className="font-bold text-lg">Congratulations you are the winner</h3>
+                        <div className="modal-action">
+                            <label htmlFor="my-modal" className="btn">Yay!</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    } else {
     return (
         <div>
             <div className="modal modal-open">
                 <div className="modal-box">
-                    <h3 className="font-bold text-lg">Congratulations random Internet user!</h3>
-                    <p className="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
+                    <h3 className="font-bold text-lg">Better Luck next time</h3>
                     <div className="modal-action">
                         <label htmlFor="my-modal" className="btn">Yay!</label>
                     </div>
@@ -14,4 +26,4 @@ function GameEndModal() {
         </div>
     )
 }
-export default GameEndModal;
+}

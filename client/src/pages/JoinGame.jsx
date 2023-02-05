@@ -9,9 +9,12 @@ function JoinGame(){
   const {state} = useLocation()
   const [inputID, setinputID] = useState('')
   const [Waiting, setWaiting] = useState(false)
+  const [question, setQuestion] = useState({})
 
   useEffect(()=>{
     socket.on('start_game', (data) => {
+      // console.log(data)
+      setQuestion(data)
       setWaiting(true)
     })
   }, []); /// important to add the square brackets in order for the effect to load only once
@@ -38,7 +41,7 @@ function JoinGame(){
               <input type="text" value={inputID} onChange = {handleInputChange} name="playerID" id="ID" />
               <button onClick={handleClick}>Find Player</button>
             </div> 
-            : <Editor /> }
+            : <Editor question = {question} /> }
           </div>
         </div>
       )

@@ -2,6 +2,6 @@ platform for a 1v1 style of competitive coding with friends 🦾
 
 
 ### Devlog
-done - added output and modal classes and passing output data to props, seperated submission response by status.(using DaisyUI)
+done - added modals for winner and losers, added sample questions, now working for two players
 
-todo - finish backend and add questions for checking output
+todo - added questions and add styling to all pages

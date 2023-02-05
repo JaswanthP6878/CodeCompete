@@ -5,12 +5,9 @@ import cors from 'cors';
 
 const app = express();
 app.use(cors)
-
 // const activePlayers = []
 let host = null;
 let opp = null;
-
-
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
@@ -32,8 +29,6 @@ io.on("connection", (socket) => {
       opp = playerID;
       console.log('join-game fired by', playerID )
   });
-
-
   socket.on('find_player', (data) => {
     const {p1ID} = data
     console.log('p1 id sent => ');
@@ -46,11 +41,7 @@ io.on("connection", (socket) => {
     } else {
       console.log('please type correct id!!');
     }
-
-
   })
-
-
 });
 
 

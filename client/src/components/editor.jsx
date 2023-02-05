@@ -1,6 +1,8 @@
 import CodeMirror from '@uiw/react-codemirror';
+import Output from './Output';
+import GameEndModal from './GameEndModal';
 import { useState } from 'react';
-import { langs, langNames } from '@uiw/codemirror-extensions-langs';
+import { langs } from '@uiw/codemirror-extensions-langs';
 import axios from 'axios'
 
 export default function Editor() {
@@ -8,14 +10,17 @@ export default function Editor() {
     const [customInput, setCustomInput] = useState('')
     const [customOutput, setCustomOutput] = useState('')
     const [processing, setProcessing] = useState(false)
-
+    const [outputDetails, setOutputDetails] = useState({})
+    let currOutput = null;
     //api calls
+
     const handleCompile = () => {
         setProcessing(true);
         const formData = {
           language_id: 71,
           source_code: btoa(code),
-          stdin: btoa(customInput)
+          stdin: btoa(customInput),
+          expected_output:  btoa(5)
         };
         const options = {
           method: "POST",
@@ -56,7 +61,6 @@ export default function Editor() {
         try {
           let response = await axios.request(options);
           let statusId = response.data.status?.id;
-    
           // Processed - we have a result
           if (statusId === 1 || statusId === 2) {
             // still processing
@@ -65,38 +69,38 @@ export default function Editor() {
             }, 2000)
             return
           } else {
+            console.log(response.data);
+            if (response.data.status?.id == 3 ){ // correct answer
+               currOutput = {output : atob(response.data.stdout), status: "accepted"}
+          } else if (response.data.status?.id == 4){ //  wrong answer
+             currOutput = {output : atob(response.data.stdout), status : "wrong"}
+          } else { //  runtime or  compile time error
+            currOutput = {output : atob(response.data.stderr), status : 'error'}
+          }
+            setOutputDetails(currOutput);
             setProcessing(false)
-            // setOutputDetails(response.data)
-            // showSuccessToast(`Compiled Successfully!`)
-            console.log(response.data)
-            // setCustomOutput(atob(response.data.stdout))
             return
           }
         } catch (err) {
           console.log("err", err);
           setProcessing(false);
-        //   showErrorToast();
         }
       };
-
 
     const handleChange = (value, viewUpdate) => {
         setCode(value);
         console.log(code);
     }
-    console.log(import.meta.env.VITE_RAPID_API_KEY)
-
-    const handleSubmit = (e) => {
-        console.log(customInput)
-        console.log(code)
-    };
 
     const handleInputChange = (e) => {
         setCustomInput(e.target.value)
     }
-    if (processing == true) {
-        return <div> Processing code </div>;
-    }
+    // if (processing == true) {
+    //     return(
+    //     <div> 
+    //       Processing code 
+    //     </div>) 
+    // }
 
     return (
         <div>
@@ -106,15 +110,15 @@ export default function Editor() {
                 extensions={[langs.python()]}
                 onChange={handleChange}
             />
-            <input className='border-2' type="text" value = {customInput} onChange = {handleInputChange}/>
+            <div className='mt-3'>
+              <input className='input w-full max-w-xs' type="text" value = {customInput} onChange = {handleInputChange}/>
+            </div>
             <button onClick={handleCompile}>Submit code!!</button>
             <div className='mt-3'>
-                <h4>Output is:</h4>
-                  <span>{customOutput}</span>
+                  <Output outputDetails = {outputDetails}/>
             </div>
+            {processing == true &&  <GameEndModal />}
         </div>
-        
-
     );
 }
 

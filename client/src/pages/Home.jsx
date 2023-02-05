@@ -18,7 +18,7 @@ function Home() {
     
     return (
         <div>
-            <h1> Home page</h1>
+            <h1>Code Compete</h1>
             <button onClick={() => navigate('/newgame', {state: {player}})}>new game</button>
             <button onClick={() => navigate('/joingame', {state: {player}})}>join game</button>
         </div>

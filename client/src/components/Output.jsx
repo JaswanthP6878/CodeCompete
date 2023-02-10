@@ -2,7 +2,7 @@ function Output ( {outputDetails }) {
     let content;
     if (outputDetails?.status == 'wrong' || outputDetails?.status == 'error'){
     content = (
-        <div className="text-rose-700">
+        <div className="bg-gray-200 text-rose-700">
             <h3>{outputDetails?.output}</h3>
         </div>
     )
@@ -16,7 +16,10 @@ function Output ( {outputDetails }) {
     return (
         <div>
             <h2>Output details</h2>
-            {content}
+            <div className="bg-gray-300">
+                {content}
+            </div>
+           
         </div>
     )
 }

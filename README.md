@@ -2,6 +2,6 @@ platform for a 1v1 style of competitive coding with friends 🦾
 
 
 ### Devlog
-done - added modals for winner and losers, added sample questions, now working for two players
+done - added styles
 
-todo - added questions and add styling to all pages
+todo - should finish stying up and added new questions (maybe add feature for more players..)

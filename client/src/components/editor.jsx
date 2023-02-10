@@ -120,25 +120,28 @@ export default function Editor( { question }) {
     // }
 
     return (
-        <div>
-
-          <div className='my-3'>
+        <div className='mt-2 flex flex-col md:flex-row'>
+          <div className='mx- 5 basis-1/2 text-xl'>
             {question?.statement}
           </div>
+          <div className='mx-5 basis-1/2'>
             <CodeMirror
                 value={code}
                 height="200px"
                 extensions={[langs.python()]}
                 onChange={handleChange}
             />
-            <div className='mt-3'>
-              <input className='input w-full max-w-xs' type="text" value = {customInput} onChange = {handleInputChange}/>
+            <div className='my-3'>
+              <label className='mr-4 text-xl' htmlFor="test-input">Input</label>
+              <input className='input input-sm input-info input-bordered w-full max-w-sm' id = "test-input" type="text" value = {customInput} onChange = {handleInputChange}/>
             </div>
-            <button className='btn btn-outline' onClick={handleCompile}>Submit code!!</button>
+            <button className={processing== true ? 'btn btn-sm btn-outline loading' :'btn btn-sm btn-outline'} onClick={handleCompile}>Test input!!</button>
+            <button className={processing== true ? 'btn btn-sm btn-outline loading mx-4 btn-success' :'btn btn-sm btn-outline mx-4 btn-success'} onClick={handleCompile}>Submit code!!</button>
             <div className='mt-3'>
                   <Output outputDetails = {outputDetails}/>
             </div>
             {endGame == true &&  <GameEndModal data = {modalData} />}
+        </div>
         </div>
     );
 }

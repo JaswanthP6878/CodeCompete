@@ -13,11 +13,10 @@ function JoinGame(){
 
   useEffect(()=>{
     socket.on('start_game', (data) => {
-      // console.log(data)
       setQuestion(data)
       setWaiting(true)
     })
-  }, []); /// important to add the square brackets in order for the effect to load only once
+  }, []); // important to add the square brackets in order for the effect to load only once
 
   const handleInputChange = (e) =>{
     setinputID(e.target.value);
@@ -30,16 +29,15 @@ function JoinGame(){
       socket.emit('find_player', {p1ID: inputID} )
     }
   }
-
       return (
         <div className='container mx-5'>
            <Navbar playerid = {state.player.playerID}/>
           <div>
           {Waiting === false ?         
-              <div>
-              <label htmlFor="id">Enter player 2 ID</label>
-              <input type="text" value={inputID} onChange = {handleInputChange} name="playerID" id="ID" />
-              <button onClick={handleClick}>Find Player</button>
+              <div className="flex flex-col justify-center items-center">
+              <label className="text-2xl" htmlFor="id">Enter Session id to join</label>
+              <input className="input input-sm  input-bordered w-full max-w-sm mt-3" type="text" value={inputID} onChange = {handleInputChange} name="playerID" id="ID" />
+              <button className="btn btn-primary mt-3" onClick={handleClick}>Find Player</button>
             </div> 
             : <Editor question = {question} /> }
           </div>

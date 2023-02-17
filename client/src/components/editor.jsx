@@ -4,6 +4,8 @@ import GameEndModal from './GameEndModal';
 import { useState, useEffect } from 'react';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import axios from 'axios'
+
+// socket object
 import socket from '../socket';
 
 export default function Editor( { question }) {
@@ -29,13 +31,15 @@ export default function Editor( { question }) {
     }, [])
 
 
-    const handleCompile = () => {
+    const handleCompile = (buttonCase) => {
+      console.log(buttonCase);
+      console.log(typeof buttonCase);
         setProcessing(true);
         const formData = {
           language_id: 71,
           source_code: btoa(code),
-          stdin: btoa(customInput),
-          expected_output:  btoa(5) // testing purposes the expected output is 5.
+          stdin: buttonCase == "Submit" ? btoa(question?.input) : btoa(customInput), // case based on submit or test
+          expected_output:  buttonCase == "Submit" ? btoa(question?.output) : btoa("--") // case based on submit or test
         };
         const options = {
           method: "POST",
@@ -112,12 +116,6 @@ export default function Editor( { question }) {
     const handleInputChange = (e) => {
         setCustomInput(e.target.value)
     }
-    // if (processing == true) {
-    //     return(
-    //     <div> 
-    //       Processing code 
-    //     </div>) 
-    // }
 
     return (
         <div className='mt-2 flex flex-col md:flex-row'>
@@ -135,8 +133,8 @@ export default function Editor( { question }) {
               <label className='mr-4 text-xl' htmlFor="test-input">Input</label>
               <input className='input input-sm input-info input-bordered w-full max-w-sm' id = "test-input" type="text" value = {customInput} onChange = {handleInputChange}/>
             </div>
-            <button className={processing== true ? 'btn btn-sm btn-outline loading' :'btn btn-sm btn-outline'} onClick={handleCompile}>Test input!!</button>
-            <button className={processing== true ? 'btn btn-sm btn-outline loading mx-4 btn-success' :'btn btn-sm btn-outline mx-4 btn-success'} onClick={handleCompile}>Submit code!!</button>
+            <button className={processing== true ? 'btn btn-sm btn-outline loading' :'btn btn-sm btn-outline'} onClick={() => handleCompile("Test")}>Test input!!</button>
+            <button className={processing== true ? 'btn btn-sm btn-outline loading mx-4 btn-success' :'btn btn-sm btn-outline mx-4 btn-success'} onClick={() => handleCompile("Submit")}>Submit code!!</button>
             <div className='mt-3'>
                   <Output outputDetails = {outputDetails}/>
             </div>

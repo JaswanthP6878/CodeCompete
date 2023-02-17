@@ -1,4 +1,6 @@
+import { useNavigate } from 'react-router-dom';
 export default function GameEndModal( { data }) {
+    const navigate = useNavigate();
     if(data?.status === 'winner'){
         return (
             <div>
@@ -6,7 +8,7 @@ export default function GameEndModal( { data }) {
                     <div className="modal-box">
                         <h3 className="font-bold text-lg">Congratulations you are the winner</h3>
                         <div className="modal-action">
-                            <label htmlFor="my-modal" className="btn">Yay!</label>
+                            <label  onClick={() => navigate('/')} htmlFor="my-modal" className="btn">Yay!</label>
                         </div>
                     </div>
                 </div>
@@ -19,7 +21,7 @@ export default function GameEndModal( { data }) {
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">Better Luck next time</h3>
                     <div className="modal-action">
-                        <label htmlFor="my-modal" className="btn">Yay!</label>
+                        <label  onClick={() => navigate('/')} htmlFor="my-modal" className="btn">Yay!</label>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,4 @@
 platform for a 1v1 style of competitive coding with friends 🦾
-
 ### ScreenShots
 #### Landing page for P1 and P2:
 ![landing page](screenshots/p1_and_p2_landingPage.png)
@@ -13,10 +12,5 @@ platform for a 1v1 style of competitive coding with friends 🦾
 #### Game End
 ![landing page](screenshots/Game_end.png)
 
-
-### Devlog
-done - added styles
-
-todo - should finish stying up and added new questions (maybe add feature for more players..)
 
 

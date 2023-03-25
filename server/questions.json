@@ -3,5 +3,10 @@
         "statement": "Display the nth Fibionacci number",
         "input": "5",
         "output": "120"
+    },
+    "2" : {
+        "statement" : "Reverese a string and print it out",
+        "input" : "rahul gandhi",
+        "output" : "ihdnag luhar"
     }
 }
